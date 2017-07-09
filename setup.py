@@ -7,4 +7,8 @@ setup(name='pvmanager',
       author='Teodor Kostov',
       license='MIT',
       packages=['pvmanager'],
+      install_requires=[
+        'cement',
+      ],
+      scripts=['bin/pvmanager'],
       zip_safe=False)

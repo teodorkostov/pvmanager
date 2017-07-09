@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+
+from pvmanager.application import PVManagerApp
+
+with PVManagerApp() as app:
+  app.run()
