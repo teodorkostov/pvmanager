@@ -1,6 +1,6 @@
 from cement.core.controller import CementBaseController, expose
 
-from pvmanager.file_manager import FileManager
+from pvmanager.manager.file import FileManager
 
 class MediaManager(CementBaseController):
   class Meta:

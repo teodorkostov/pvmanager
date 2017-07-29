@@ -3,7 +3,7 @@ from cement.core.foundation import CementApp
 from cement.core import hook
 from cement.utils.misc import init_defaults
 
-from pvmanager.media_manager import MediaManager
+from pvmanager.manager.media import MediaManager
 
 # define our default configuration options
 defaults = init_defaults("myapp")
