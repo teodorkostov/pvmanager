@@ -3,7 +3,7 @@ from cement.core.foundation import CementApp
 from cement.core import hook
 from cement.utils.misc import init_defaults
 
-from media_manager import MediaManager
+from pvmanager.media_manager import MediaManager
 
 # define our default configuration options
 defaults = init_defaults("myapp")
@@ -53,7 +53,4 @@ class PVManagerApp(CementApp):
     output_handler = "mustache"
     base_controller = "base"
     handlers = [MyBaseController, MediaManager]
-    template_module = "templates"
-
-with PVManagerApp() as app:
-  app.run()
+    template_module = "pvmanager.templates"

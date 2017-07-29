@@ -6,9 +6,15 @@ setup(name='pvmanager',
       url='http://github.com/terusus/pvmanager',
       author='Teodor Kostov',
       license='MIT',
-      packages=['pvmanager'],
+      packages=['pvmanager', 'pvmanager.templates'],
+      package_data = {
+        '': ['*.m'],
+      },
       install_requires=[
         'cement',
       ],
       scripts=['bin/pvmanager'],
+      # entry_points = {
+      #   'console_scripts': ['pvmanager=pvmanager.cli'],
+      # },
       zip_safe=False)
