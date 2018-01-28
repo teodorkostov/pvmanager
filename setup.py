@@ -14,7 +14,4 @@ setup(name='pvmanager',
         'cement',
       ],
       scripts=['bin/pvmanager'],
-      # entry_points = {
-      #   'console_scripts': ['pvmanager=pvmanager.cli'],
-      # },
       zip_safe=False)
