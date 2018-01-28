@@ -41,9 +41,25 @@ class MyBaseController(CementBaseController, JustAClass):
   def command1(self):
     self.app.log.info("Inside MyBaseController.command1()")
 
-# define the application class
+
+
 class PVManagerApp(CementApp):
+  """The main application class.
+
+  The main application extends CementApp in order to become a CLI.
+  """
   class Meta:
+    """The configuration for the main application.
+
+    Attributes:
+      label (string)              : The name of the application.
+      config_defaults (dictionary): The standard cement configuration options.
+      hooks (array)               : Application lifecycle functionality.
+      extensions (array)          : Additional plugins.
+      base_controller (string)    : The name of the base app controller.
+      handlers (array)            : All application controllers.
+      template_module (string)    : The name of the module with mustache templates.
+    """
     label = "pvmanager"
     config_defaults = defaults
     hooks = [
