@@ -7,9 +7,9 @@ from pvmanager.manager.media import MediaManager
 
 
 # define our default configuration options
-defaults = init_defaults("myapp")
-defaults["myapp"]["debug"] = False
-defaults["myapp"]["prefix"] = "."
+defaults = init_defaults("pvmanager")
+defaults["pvmanager"]["debug"] = False
+defaults["pvmanager"]["prefix"] = "."
 
 
 # define any hook functions here

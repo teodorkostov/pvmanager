@@ -10,12 +10,22 @@ class AbstractBaseController(CementBaseController):
 
   """
   class Meta:
+    """The meta configuration options for all controllers."""
     stacked_on = "base"
     stacked_type = "nested"
 
-  def _setup(self, base_app):
-    super(AbstractBaseController, self)._setup(base_app)
+  def __init__(self):
+    CementBaseController.__init__(self)
+    self.app_name = "pvmanager"
+
+  def _setup(self, app_obj):
+    """The default cement controller setup."""
+    super(AbstractBaseController, self)._setup(app_obj)
 
     # add a common object that will be used in any sub-class
     # pylint: disable=W0201
     self.reusable_dict = dict()
+
+  def get(self, key):
+    """Helper method to get config properties for the current application."""
+    self.app.config.get(self.app_name, key)
