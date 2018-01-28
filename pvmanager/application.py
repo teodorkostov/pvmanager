@@ -7,9 +7,9 @@ from pvmanager.manager.media import MediaManager
 
 
 # define our default configuration options
-defaults = init_defaults("pvmanager")
-defaults["pvmanager"]["debug"] = False
-defaults["pvmanager"]["prefix"] = "."
+DEFAULTS = init_defaults("pvmanager")
+DEFAULTS["pvmanager"]["debug"] = False
+DEFAULTS["pvmanager"]["prefix"] = "."
 
 
 # define any hook functions here
@@ -23,7 +23,7 @@ class PVManagerApp(CementApp):
   The main application extends CementApp in order to become a CLI.
   """
   class Meta:
-    """The configuration for the main application.
+    """The meta configuration for the main application.
 
     Attributes:
       label (string)              : The name of the application.
@@ -35,7 +35,7 @@ class PVManagerApp(CementApp):
       template_module (string)    : The name of the module with mustache templates.
     """
     label = "pvmanager"
-    config_defaults = defaults
+    config_defaults = DEFAULTS
     hooks = [
       ('pre_close', cleanup_hook),
     ]
@@ -48,6 +48,7 @@ class PVManagerApp(CementApp):
 
 
 def main():
+  """The application main point."""
   with PVManagerApp() as app:
     app.args.add_argument('--prefix', action='store', dest='prefix')
     app.run()
