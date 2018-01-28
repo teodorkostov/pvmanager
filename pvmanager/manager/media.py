@@ -1,18 +1,23 @@
-from cement.core.controller import CementBaseController, expose
+from cement.core.controller import expose
 
+from pvmanager.abstract_base_controller import AbstractBaseController
 from pvmanager.manager.file import FileManager
 
-class MediaManager(CementBaseController):
+
+class MediaManager(AbstractBaseController):
   class Meta:
     label = "media"
-    stacked_on = "base"
-    stacked_type = "nested"
-    description = "Media manager."
+    description = "Media manager that handles the different VM installations."
 
-  def __init__(self, basePath="."):
-    CementBaseController.__init__(self)
-    self.file_manager = FileManager(basePath)
+  def __init__(self):
+    AbstractBaseController.__init__(self)
+
+  @expose(hide=True)
+  def default(self):
+    self.app.args.print_help()
 
   @expose(help="List available installation media.")
   def list(self):
-    self.app.render(dict(data=self.file_manager.list()), "list.m")
+    base_path = self.app.config.get('myapp', 'prefix')
+    file_manager = FileManager(base_path)
+    self.app.render(dict(data=file_manager.list()), "list.m")
