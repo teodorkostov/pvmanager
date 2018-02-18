@@ -1,5 +1,7 @@
 from cement.core.controller import expose
 
+from configparser import ConfigParser
+
 from pvmanager.abstract_base_controller import AbstractBaseController
 
 
@@ -16,18 +18,21 @@ class ConfigManager(AbstractBaseController):
         (['extra_arguments'], dict(action='store', nargs='*'))
     ]
 
+  def __init__(self):
+    AbstractBaseController.__init__(self)
+    self.config_path = self.home_path / "config"
+
   def _setup(self, app_obj):
     """The config controller setup."""
     super(ConfigManager, self)._setup(app_obj)
 
-    config_path = self.home_path / "config"
-    if not config_path.exists():
-      app_obj.log.info("creating config file ({})".format(config_path))
-      config_path.touch()
+    if not self.config_path.exists():
+      app_obj.log.info("creating config file ({})".format(self.config_path))
+      self.config_path.touch()
 
-  def _validate_extra_arguments(self):
+  def _validate_extra_arguments(self, count):
     size = len(self.app.pargs.extra_arguments)
-    if 0 == size or 1 < size:
+    if 0 == size or count < size:
       self.app.log.error("expected only one property")
       return False
     return True
@@ -43,6 +48,25 @@ class ConfigManager(AbstractBaseController):
   @expose(help="Prints a config property")
   def get(self):
     """The `get` command prints out the desired config property."""
-    if self._validate_extra_arguments():
+    if self._validate_extra_arguments(1):
       prop = self.app.pargs.extra_arguments[0]
-      self._render("{prop_name} = '{prop_value}'".format(prop_name = prop, prop_value = self.get_config(prop)))
+      self._render("{prop_name} = '{prop_value}'".format(prop_name=prop, prop_value=self.get_config(prop)))
+
+  @expose(help="Saves a config property")
+  def set(self):
+    """The `set` command saves the desired config property to the config file."""
+    if self._validate_extra_arguments(2):
+      prop_name = self.app.pargs.extra_arguments[0]
+      prop_value = self.app.pargs.extra_arguments[1]
+
+      config = ConfigParser()
+      config.read(self.config_path)
+
+      if not config.sections():
+        config.add_section(self.app_name)
+
+      config[self.app_name][prop_name] = prop_value
+
+      with open(self.config_path, 'w') as config_file:
+        config.write(config_file)
+        self.app.log.info("new prefix saved")
