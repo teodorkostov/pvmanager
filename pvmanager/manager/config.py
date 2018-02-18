@@ -9,9 +9,12 @@ class ConfigManager(AbstractBaseController):
     """The Media Manager meta configuration."""
     label = "config"
     description = """
-    Config manager handles the persisted configuration settings.
-    Config file is located at ~/.pvmanager/config.
-    """
+      Config manager handles the persisted configuration settings.
+      Config file is located at ~/.pvmanager/config.
+      """
+    arguments = [
+        (['extra_arguments'], dict(action='store', nargs='*'))
+    ]
 
   def _setup(self, app_obj):
     """The config controller setup."""
@@ -27,7 +30,7 @@ class ConfigManager(AbstractBaseController):
     """Default command handler just prints out the help information."""
     self.app.args.print_help()
 
-  @expose(help="List available installation media.")
-  def list(self):
-    """The `list` command prints out all of the VM installations in the chosen root path."""
-    self.app.log.info("nothing")
+  @expose(help="Prints a config property")
+  def get(self):
+    """The `get` command prints out the desired config property."""
+    self.app.log.info(self.app.pargs)
