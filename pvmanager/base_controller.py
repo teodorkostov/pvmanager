@@ -19,7 +19,7 @@ class BaseController(AbstractBaseController, JustAClass):
     super(BaseController, self)._setup(app_obj)
 
     if not self.home_path.exists():
-      app_obj.log.info("creating app home (%s)" % self.home_path)
+      app_obj.log.info("creating app home ({})".format(self.home_path))
       self.home_path.mkdir()
 
   @expose(hide=True)

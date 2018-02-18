@@ -22,7 +22,7 @@ class ConfigManager(AbstractBaseController):
 
     config_path = self.home_path / "config"
     if not config_path.exists():
-      app_obj.log.info("creating config file (%s)" % config_path)
+      app_obj.log.info("creating config file ({})".format(config_path))
       config_path.touch()
 
   def _validate_extra_arguments(self):
@@ -33,7 +33,7 @@ class ConfigManager(AbstractBaseController):
     return True
 
   def _render(self, result):
-    print("  %s" % result)
+    print("  {}".format(result))
 
   @expose(hide=True)
   def default(self):

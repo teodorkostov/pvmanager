@@ -19,7 +19,7 @@ class AbstractBaseController(CementBaseController):
   def __init__(self):
     CementBaseController.__init__(self)
     self.app_name = "pvmanager"
-    self.home_path = Path.home() / (".%s" % self.app_name)
+    self.home_path = Path.home() / ".{}".format(self.app_name)
 
   def _setup(self, app_obj):
     """The default cement controller setup."""
