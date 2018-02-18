@@ -14,9 +14,13 @@ class BaseController(AbstractBaseController, JustAClass):
     label = "base"
     description = "Python VM manager."
 
-  def __init__(self):
-    AbstractBaseController.__init__(self)
-    self.wtf = "come on..."
+  def _setup(self, app_obj):
+    """The base controller setup."""
+    super(BaseController, self)._setup(app_obj)
+
+    if not self.home_path.exists():
+      app_obj.log.info("creating app home (%s)" % self.home_path)
+      self.home_path.mkdir()
 
   @expose(hide=True)
   def default(self):
