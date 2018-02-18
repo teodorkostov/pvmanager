@@ -23,5 +23,5 @@ class MediaManager(AbstractBaseController):
   def list(self):
     """The `list` command prints out all of the VM installations in the chosen root path."""
     base_path = self.get_config("prefix")
-    file_manager = FileManager(base_path)
+    file_manager = FileManager(self)
     self.app.render(dict(data=file_manager.list()), "list.m")

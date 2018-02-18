@@ -2,6 +2,8 @@ from cement.core.foundation import CementApp
 from cement.core import hook
 from cement.utils.misc import init_defaults
 
+from pathlib import Path
+
 from pvmanager.base_controller import BaseController
 from pvmanager.manager.config import ConfigManager
 from pvmanager.manager.media import MediaManager
@@ -10,7 +12,7 @@ from pvmanager.manager.media import MediaManager
 # define our default configuration options
 DEFAULTS = init_defaults("pvmanager")
 DEFAULTS["pvmanager"]["debug"] = False
-DEFAULTS["pvmanager"]["prefix"] = "."
+DEFAULTS["pvmanager"]["prefix"] = "{}/.pvmanager/vm".format(Path.home())
 
 
 # define any hook functions here
