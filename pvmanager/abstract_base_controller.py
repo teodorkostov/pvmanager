@@ -29,6 +29,6 @@ class AbstractBaseController(CementBaseController):
     # pylint: disable=W0201
     self.reusable_dict = dict()
 
-  def get(self, key):
+  def get_config(self, key):
     """Helper method to get config properties for the current application."""
     return self.app.config.get(self.app_name, key)

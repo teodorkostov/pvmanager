@@ -25,6 +25,16 @@ class ConfigManager(AbstractBaseController):
       app_obj.log.info("creating config file (%s)" % config_path)
       config_path.touch()
 
+  def _validate_extra_arguments(self):
+    size = len(self.app.pargs.extra_arguments)
+    if 0 == size or 1 < size:
+      self.app.log.error("expected only one property")
+      return False
+    return True
+
+  def _render(self, result):
+    print("  %s" % result)
+
   @expose(hide=True)
   def default(self):
     """Default command handler just prints out the help information."""
@@ -33,4 +43,6 @@ class ConfigManager(AbstractBaseController):
   @expose(help="Prints a config property")
   def get(self):
     """The `get` command prints out the desired config property."""
-    self.app.log.info(self.app.pargs)
+    if self._validate_extra_arguments():
+      prop = self.app.pargs.extra_arguments[0]
+      self._render("{prop_name} = '{prop_value}'".format(prop_name = prop, prop_value = self.get_config(prop)))
