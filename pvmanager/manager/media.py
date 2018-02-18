@@ -1,3 +1,7 @@
+"""
+The MediaManager and all media handling functionality.
+"""
+
 from cement.core.controller import expose
 
 from pvmanager.abstract_base_controller import AbstractBaseController

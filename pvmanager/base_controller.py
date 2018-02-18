@@ -1,3 +1,7 @@
+"""
+The BaseController and the application root logic.
+"""
+
 from cement.core.controller import expose
 
 from pvmanager.abstract_base_controller import AbstractBaseController
@@ -10,7 +14,13 @@ class JustAClass:
 
 
 class BaseController(AbstractBaseController, JustAClass):
+  """
+  The application root controller.
+  """
   class Meta:
+    """
+    The meta configuration of the BaseController.
+    """
     label = "base"
     description = "Python VM manager."
 
@@ -24,6 +34,7 @@ class BaseController(AbstractBaseController, JustAClass):
 
   @expose(hide=True)
   def default(self):
+    """Default command handler just prints out the help information."""
     self.app.args.print_help()
 
   @expose(help="this command does relatively nothing useful")

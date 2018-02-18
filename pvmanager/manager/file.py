@@ -1,3 +1,7 @@
+"""
+The FileManager and raw file handling operations.
+"""
+
 from pathlib import Path
 
 

@@ -1,6 +1,10 @@
-from cement.core.controller import CementBaseController, expose
+"""
+The AbstractBaseController and core controller functionality.
+"""
 
 from pathlib import Path
+
+from cement.core.controller import CementBaseController
 
 
 class AbstractBaseController(CementBaseController):

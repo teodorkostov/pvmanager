@@ -1,8 +1,11 @@
-from cement.core.foundation import CementApp
-from cement.core import hook
-from cement.utils.misc import init_defaults
+"""
+The module handling around the main application objects.
+"""
 
 from pathlib import Path
+
+from cement.core.foundation import CementApp
+from cement.utils.misc import init_defaults
 
 from pvmanager.base_controller import BaseController
 from pvmanager.manager.config import ConfigManager

@@ -1,6 +1,10 @@
-from cement.core.controller import expose
+"""
+This ConfigManager and the user-facing configuration functionality.
+"""
 
 from configparser import ConfigParser
+
+from cement.core.controller import expose
 
 from pvmanager.abstract_base_controller import AbstractBaseController
 
