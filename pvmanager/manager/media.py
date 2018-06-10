@@ -13,7 +13,9 @@ class MediaManager(AbstractBaseController):
   class Meta:
     """The Media Manager meta configuration."""
     label = "media"
-    description = "Media manager that handles the different VM installations."
+    description = """
+    Media manager that handles the different VM installations.
+    """
 
   def __init__(self):
     AbstractBaseController.__init__(self)

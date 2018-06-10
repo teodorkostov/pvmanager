@@ -17,7 +17,7 @@ class ConfigManager(AbstractBaseController):
     description = """
     Config manager handles the persisted configuration settings.
     Config file is located at ~/.pvmanager/config.
-    """.strip()
+    """
     arguments = [
       (['extra_arguments'], dict(action='store', nargs='*'))
     ]
