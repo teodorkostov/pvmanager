@@ -68,10 +68,13 @@ class VmManager(AbstractBaseController):
       self.app.log.error('expected the VM name as an extra argument')
       return
 
-    vm_name = self.app.pargs.extra_arguments[0]
-    self._render(vm_name)
-    safe_vm_name = convert_general_to_snake(vm_name)
-    self._render(safe_vm_name)
+    vm_instance_path = self._get_vm_path(self.app.pargs.extra_arguments[0])
+
+    if vm_instance_path.exists():
+      self.app.log.error('a VM with the same name ({}) already exists'.format(vm_instance_path.stem))
+      return
+
+    self._render(vm_instance_path)
 
   @expose(help='Run a VM configuration from the current PREFIX.')
   def run(self):
@@ -83,7 +86,7 @@ class VmManager(AbstractBaseController):
     vm_instance_path = self._get_vm_path(self.app.pargs.extra_arguments[0])
 
     if not vm_instance_path.exists():
-      self.app.log.error('the selected VM does not exist')
+      self.app.log.error('the selected VM ({}) does not exist'.format(vm_instance_path.stem))
       return
 
     self.app.log.info('running VM "{}"'.format(vm_instance_path.stem))
