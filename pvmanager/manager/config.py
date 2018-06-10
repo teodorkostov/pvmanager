@@ -44,11 +44,6 @@ class ConfigManager(AbstractBaseController):
   def _render(self, result):
     print('  {}'.format(result))
 
-  @expose(hide=True)
-  def default(self):
-    """Default command handler just prints out the help information."""
-    self.app.args.print_help()
-
   @expose(help='Prints a config property')
   def get(self):
     """The `get` command prints out the desired config property."""

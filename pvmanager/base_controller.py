@@ -32,11 +32,6 @@ class BaseController(AbstractBaseController, JustAClass):
       app_obj.log.info("creating app home ({})".format(self.home_path))
       self.home_path.mkdir()
 
-  @expose(hide=True)
-  def default(self):
-    """Default command handler just prints out the help information."""
-    self.app.args.print_help()
-
   @expose(help="this command does relatively nothing useful")
   def command1(self):
     self.app.log.info("Inside MyBaseController.command1()")

@@ -5,6 +5,7 @@ The AbstractBaseController and core controller functionality.
 from pathlib import Path
 
 from cement.core.controller import CementBaseController
+from cement.core.controller import expose
 
 
 class AbstractBaseController(CementBaseController):
@@ -14,15 +15,19 @@ class AbstractBaseController(CementBaseController):
   arguments.  This should not be confused with the actual base
   controller.
   """
+
+
   class Meta:
     """The meta configuration options for all controllers."""
     stacked_on = 'base'
     stacked_type = 'nested'
 
+
   def __init__(self):
     CementBaseController.__init__(self)
     self.app_name = 'pvmanager'
     self.home_path = Path.home() / '.{}'.format(self.app_name)
+
 
   def _setup(self, app_obj):
     """The default cement controller setup."""
@@ -32,6 +37,13 @@ class AbstractBaseController(CementBaseController):
     # pylint: disable=W0201
     self.reusable_dict = dict()
 
+
   def get_config(self, key):
     """Helper method to get config properties for the current application."""
     return self.app.config.get(self.app_name, key)
+
+
+  @expose(hide=True)
+  def default(self):
+    """Default command handler just prints out the help information."""
+    self.app.args.print_help()

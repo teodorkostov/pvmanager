@@ -61,12 +61,6 @@ class VmManager(AbstractBaseController):
     return self.vm_path / '{}.yaml'.format(safe_vm_name)
 
 
-  @expose(hide=True)
-  def default(self):
-    """Default command handler just prints out the help information."""
-    self.app.args.print_help()
-
-
   @expose(help='List all VM configurations in the current PREFIX.')
   def list(self):
     self.app.render(dict(data=self.vm_path.iterdir()), "list.m")

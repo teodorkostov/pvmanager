@@ -18,11 +18,6 @@ class MediaManager(AbstractBaseController):
   def __init__(self):
     AbstractBaseController.__init__(self)
 
-  @expose(hide=True)
-  def default(self):
-    """Default command handler just prints out the help information."""
-    self.app.args.print_help()
-
   @expose(help="List available installation media.")
   def list(self):
     """The `list` command prints out all of the VM installations in the chosen root path."""
