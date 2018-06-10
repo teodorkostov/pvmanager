@@ -33,7 +33,7 @@ class VmManager(AbstractBaseController):
     self.vm_path = Path(self.get_config('prefix')) / 'vm'
 
     if not self.vm_path.exists():
-      app_obj.log.info('creating vm path ({})'.format(self.vm_path))
+      app_obj.log.info('creating VM path ({})'.format(self.vm_path))
       self.vm_path.mkdir()
 
   def _render(self, result):
@@ -43,3 +43,7 @@ class VmManager(AbstractBaseController):
   def default(self):
     """Default command handler just prints out the help information."""
     self.app.args.print_help()
+
+  @expose(help='List all VM configurations in the current PREFIX.')
+  def list(self):
+    self.app.render(dict(data=self.vm_path.iterdir()), "list.m")
