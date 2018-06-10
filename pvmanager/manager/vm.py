@@ -66,6 +66,7 @@ class VmManager(AbstractBaseController):
     """Default command handler just prints out the help information."""
     self.app.args.print_help()
 
+
   @expose(help='List all VM configurations in the current PREFIX.')
   def list(self):
     self.app.render(dict(data=self.vm_path.iterdir()), "list.m")
@@ -78,7 +79,8 @@ class VmManager(AbstractBaseController):
       self.app.log.error('expected the VM name as an extra argument')
       return
 
-    vm_instance_path = self._get_vm_path(self.app.pargs.extra_arguments[0])
+    general_vm_name = self.app.pargs.extra_arguments[0]
+    vm_instance_path = self._get_vm_path(general_vm_name)
 
     if vm_instance_path.exists():
       self.app.log.error('a VM with the same name ({}) already exists'.format(vm_instance_path.stem))
