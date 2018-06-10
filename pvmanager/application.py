@@ -15,7 +15,7 @@ from pvmanager.manager.media import MediaManager
 # define our default configuration options
 DEFAULTS = init_defaults("pvmanager")
 DEFAULTS["pvmanager"]["debug"] = False
-DEFAULTS["pvmanager"]["prefix"] = "{}/.pvmanager/vm".format(Path.home())
+DEFAULTS["pvmanager"]["prefix"] = "{}/.pvmanager".format(Path.home())
 
 
 # define any hook functions here
@@ -61,4 +61,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+  main()
