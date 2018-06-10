@@ -11,6 +11,7 @@ from cement.core.controller import expose
 from pvmanager.abstract_base_controller import AbstractBaseController
 
 
+
 def convert_general_to_snake(general_name):
   no_spaces = re.sub('[\t \-*+]', '_', general_name)
   no_camel_case = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', no_spaces)
@@ -18,8 +19,11 @@ def convert_general_to_snake(general_name):
   snake_case = re.sub('_+', '_', extended_snake_case)
   return re.sub('^_|_$', '', snake_case)
 
+
+
 class VmManager(AbstractBaseController):
   """The VM Manager handles the VM configurations in $prefix/vm/."""
+
   class Meta:
     """The VM Manager meta configuration."""
     label = 'vm'
@@ -31,9 +35,11 @@ class VmManager(AbstractBaseController):
         (['extra_arguments'], dict(action='store', nargs='*'))
     ]
 
+
   def __init__(self):
     AbstractBaseController.__init__(self)
     self.vm_path = None
+
 
   def _setup(self, app_obj):
     """The VM controller setup."""
@@ -45,12 +51,15 @@ class VmManager(AbstractBaseController):
       app_obj.log.info('creating VM path ({})'.format(self.vm_path))
       self.vm_path.mkdir()
 
+
   def _render(self, result):
     print('  {}'.format(result))
+
 
   def _get_vm_path(self, general_vm_name):
     safe_vm_name = convert_general_to_snake(general_vm_name)
     return self.vm_path / '{}.yaml'.format(safe_vm_name)
+
 
   @expose(hide=True)
   def default(self):
@@ -60,6 +69,7 @@ class VmManager(AbstractBaseController):
   @expose(help='List all VM configurations in the current PREFIX.')
   def list(self):
     self.app.render(dict(data=self.vm_path.iterdir()), "list.m")
+
 
   @expose(help='Create a new VM configuration in the current PREFIX.')
   def create(self):
@@ -75,6 +85,7 @@ class VmManager(AbstractBaseController):
       return
 
     self._render(vm_instance_path)
+
 
   @expose(help='Run a VM configuration from the current PREFIX.')
   def run(self):
