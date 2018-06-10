@@ -15,9 +15,9 @@ class ConfigManager(AbstractBaseController):
     """The Config Manager meta configuration."""
     label = 'config'
     description = """
-      Config manager handles the persisted configuration settings.
-      Config file is located at ~/.pvmanager/config.
-      """
+    Config manager handles the persisted configuration settings.
+    Config file is located at ~/.pvmanager/config.
+    """.strip()
     arguments = [
         (['extra_arguments'], dict(action='store', nargs='*'))
     ]

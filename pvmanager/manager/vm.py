@@ -28,9 +28,9 @@ class VmManager(AbstractBaseController):
     """The VM Manager meta configuration."""
     label = 'vm'
     description = """
-      VM manager handles the VM configurations.
-      All VM config files are located at $prefix/vm/.
-      """
+    VM manager handles the VM configurations.
+    All VM config files are located at $prefix/vm/.
+    """.strip()
     arguments = [
         (['extra_arguments'], dict(action='store', nargs='*'))
     ]
