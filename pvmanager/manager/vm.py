@@ -3,12 +3,20 @@ This VmManager and the VM configuration functionality.
 """
 
 from pathlib import Path
+import re
 import yaml
 
 from cement.core.controller import expose
 
 from pvmanager.abstract_base_controller import AbstractBaseController
 
+
+def convert_general_to_snake(general_name):
+  no_spaces = re.sub('[\t \-*+]', '_', general_name)
+  no_camel_case = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', no_spaces)
+  extended_snake_case = re.sub('([a-z0-9])([A-Z])', r'\1_\2', no_camel_case).lower()
+  snake_case = re.sub('_+', '_', extended_snake_case)
+  return re.sub('^_|_$', '', snake_case)
 
 class VmManager(AbstractBaseController):
   """The VM Manager handles the VM configurations in $prefix/vm/."""
@@ -48,6 +56,18 @@ class VmManager(AbstractBaseController):
   @expose(help='List all VM configurations in the current PREFIX.')
   def list(self):
     self.app.render(dict(data=self.vm_path.iterdir()), "list.m")
+
+  @expose(help='Create a new VM configuration in the current PREFIX.')
+  def create(self):
+    size = len(self.app.pargs.extra_arguments)
+    if 1 > size:
+      self.app.log.error('expected the VM name as an extra argument')
+      return
+
+    vm_name = self.app.pargs.extra_arguments[0]
+    self._render(vm_name)
+    safe_vm_name = convert_general_to_snake(vm_name)
+    self._render(safe_vm_name)
 
   @expose(help='Run a VM configuration from the current PREFIX.')
   def run(self):
