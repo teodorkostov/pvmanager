@@ -48,6 +48,10 @@ class VmManager(AbstractBaseController):
   def _render(self, result):
     print('  {}'.format(result))
 
+  def _get_vm_path(self, general_vm_name):
+    safe_vm_name = convert_general_to_snake(general_vm_name)
+    return self.vm_path / '{}.yaml'.format(safe_vm_name)
+
   @expose(hide=True)
   def default(self):
     """Default command handler just prints out the help information."""
@@ -76,8 +80,13 @@ class VmManager(AbstractBaseController):
       self.app.log.error('expected the VM name as an extra argument')
       return
 
-    vm_instance_path = self.vm_path / self.app.pargs.extra_arguments[0]
-    self.app.log.info('running VM {}'.format(self.app.pargs.extra_arguments[0]))
+    vm_instance_path = self._get_vm_path(self.app.pargs.extra_arguments[0])
+
+    if not vm_instance_path.exists():
+      self.app.log.error('the selected VM does not exist')
+      return
+
+    self.app.log.info('running VM "{}"'.format(vm_instance_path.stem))
 
     with vm_instance_path.open() as stream:
       vm_instance = yaml.load(stream)
