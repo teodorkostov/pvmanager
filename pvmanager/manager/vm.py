@@ -3,6 +3,7 @@ This VmManager and the VM configuration functionality.
 """
 
 from pathlib import Path
+import yaml
 
 from cement.core.controller import expose
 
@@ -47,3 +48,17 @@ class VmManager(AbstractBaseController):
   @expose(help='List all VM configurations in the current PREFIX.')
   def list(self):
     self.app.render(dict(data=self.vm_path.iterdir()), "list.m")
+
+  @expose(help='Run a VM configuration from the current PREFIX.')
+  def run(self):
+    size = len(self.app.pargs.extra_arguments)
+    if 1 > size:
+      self.app.log.error('expected the VM name as an extra argument')
+      return
+
+    vm_instance_path = self.vm_path / self.app.pargs.extra_arguments[0]
+    self.app.log.info('running VM {}'.format(self.app.pargs.extra_arguments[0]))
+
+    with vm_instance_path.open() as stream:
+      vm_instance = yaml.load(stream)
+      self._render(vm_instance)
