@@ -10,6 +10,7 @@ from cement.utils.misc import init_defaults
 from pvmanager.base_controller import BaseController
 from pvmanager.manager.config import ConfigManager
 from pvmanager.manager.media import MediaManager
+from pvmanager.manager.vm import VmManager
 
 
 # define our default configuration options
@@ -48,7 +49,7 @@ class PVManagerApp(CementApp):
     extensions = ["mustache"]
     output_handler = "mustache"
     base_controller = "base"
-    handlers = [BaseController, ConfigManager, MediaManager]
+    handlers = [BaseController, ConfigManager, MediaManager, VmManager]
     template_module = "pvmanager.templates"
     arguments_override_config = True
 
