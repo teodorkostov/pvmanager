@@ -6,7 +6,7 @@ setup(name='pvmanager',
       url='http://github.com/terusus/pvmanager',
       author='Teodor Kostov',
       license='MIT',
-      packages=['pvmanager', 'pvmanager.templates', 'pvmanager.manager'],
+      packages=['pvmanager', 'pvmanager.templates', 'pvmanager.manager', 'pvmanager.manager.media'],
       package_data = {
         '': ['*.m'],
       },
