@@ -32,7 +32,7 @@ class VmManager(AbstractBaseController):
     All VM config files are located at $prefix/vm/.
     """.strip()
     arguments = [
-        (['extra_arguments'], dict(action='store', nargs='*'))
+      (['extra_arguments'], dict(action='store', nargs='*'))
     ]
 
 

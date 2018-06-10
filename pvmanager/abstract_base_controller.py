@@ -13,17 +13,16 @@ class AbstractBaseController(CementBaseController):
   by other classes to sub-class from and to share common commands and
   arguments.  This should not be confused with the actual base
   controller.
-
   """
   class Meta:
     """The meta configuration options for all controllers."""
-    stacked_on = "base"
-    stacked_type = "nested"
+    stacked_on = 'base'
+    stacked_type = 'nested'
 
   def __init__(self):
     CementBaseController.__init__(self)
-    self.app_name = "pvmanager"
-    self.home_path = Path.home() / ".{}".format(self.app_name)
+    self.app_name = 'pvmanager'
+    self.home_path = Path.home() / '.{}'.format(self.app_name)
 
   def _setup(self, app_obj):
     """The default cement controller setup."""

@@ -19,7 +19,7 @@ class ConfigManager(AbstractBaseController):
     Config file is located at ~/.pvmanager/config.
     """.strip()
     arguments = [
-        (['extra_arguments'], dict(action='store', nargs='*'))
+      (['extra_arguments'], dict(action='store', nargs='*'))
     ]
 
   def __init__(self):
