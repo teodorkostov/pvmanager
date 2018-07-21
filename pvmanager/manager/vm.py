@@ -3,21 +3,11 @@ This VmManager and the VM configuration functionality.
 """
 
 from pathlib import Path
-import re
 import yaml
 
 from cement.core.controller import expose
 
 from pvmanager.abstract_base_controller import AbstractBaseController
-
-
-
-def convert_general_to_snake(general_name):
-  no_spaces = re.sub('[\t \-*+]', '_', general_name)
-  no_camel_case = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', no_spaces)
-  extended_snake_case = re.sub('([a-z0-9])([A-Z])', r'\1_\2', no_camel_case).lower()
-  snake_case = re.sub('_+', '_', extended_snake_case)
-  return re.sub('^_|_$', '', snake_case)
 
 
 
@@ -57,8 +47,7 @@ class VmManager(AbstractBaseController):
 
 
   def _get_vm_path(self, general_vm_name):
-    safe_vm_name = convert_general_to_snake(general_vm_name)
-    return self.vm_path / '{}.yaml'.format(safe_vm_name)
+    return self.vm_path / '{}.yaml'.format(general_vm_name)
 
 
   @expose(help='List all VM configurations in the current PREFIX.')
