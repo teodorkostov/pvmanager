@@ -26,15 +26,21 @@ DEFAULTS["pvmanager"]["prefix"] = "{}/.pvmanager".format(Path.home())
 # define any hook functions here
 def convert_general_to_snake(general_name):
   """Convertion of general strings to snake case."""
+
   no_spaces = re.sub(r'[\t \-*+]', '_', general_name)
   no_camel_case = re.sub(r'(.)([A-Z][a-z]+)', r'\1_\2', no_spaces)
   extended_snake_case = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', no_camel_case).lower()
   snake_case = re.sub(r'_+', '_', extended_snake_case)
+
   return re.sub(r'^_|_$', '', snake_case)
+
 
 def process_extra_arguments(app):
   """Converting extra arguments to safe snake case strings."""
-  app.pargs.extra_arguments = list(map(convert_general_to_snake, app.pargs.extra_arguments))
+
+  size = len(app.pargs.extra_arguments)
+  if 0 < size:
+    app.pargs.extra_arguments[0] = convert_general_to_snake(app.pargs.extra_arguments[0])
 
 
 class PVManagerApp(CementApp):
