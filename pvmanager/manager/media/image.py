@@ -67,6 +67,11 @@ class ImageMediaManager(GenericMediaController):
     if not vm_image_path.exists():
       return
 
+    user_confirmation = input('Confirm delete command (yes/no): ')
+
+    if 'yes' != user_confirmation:
+      return
+
     self.app.log.info('deleting VM image {}'.format(vm_image_path))
 
     vm_image_path.unlink()
