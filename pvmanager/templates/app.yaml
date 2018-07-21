@@ -1,0 +1,74 @@
+---
+qemu:
+  run:
+    default:
+      - base
+      - no-defaults
+      - memory-huge-pages
+      - vga-passthrough
+      - usb-passthrough
+    install:
+      - base
+      - install
+
+
+  config:
+    base:
+      name: {{original_name}}
+      cpu: host,kvm=off,hv_vapic,hv_time,hv_relaxed,hv_spinlocks=0x1fff,hv_vendor_id=sugoidesu
+      smp: sockets=1,cores=3,threads=1
+      m: {{memory_size_mb}}
+      flags:
+        - enable-kvm
+      device:
+        - ich9-usb-uhci3,id=uhci
+        - usb-ehci,id=ehci
+        - nec-usb-xhci,id=xhci
+      machine: pc,accel=kvm,kernel_irqchip=on,mem-merge=off
+      drive:
+        - if=pflash,format=raw,file=media/firmware/{{safe_name}}.bin
+        - if=virtio,id=drive0,file=media/image/{{safe_name}}.raw,format=raw,cache=none,aio=native
+      rtc: base=localtime,clock=host,driftfix=none
+      boot: order=c
+      net:
+        - nic,model=virtio
+        - tap,ifname={{net_ifname}},script=no,downscript=no
+      soundhw: hda
+
+    install:
+      vga: qxl
+      display: sdl
+      boot: order=d
+      device:
+        {{#install_media}}
+        - ide-cd,drive=drive-cd-disk{{media_index}},id=cd-disk{{media_index}},unit=0,bus=ide.{{media_index}}
+        {{/install_media}}
+      drive:
+        {{#install_media}}
+        - file={{media_path}},if=none,id=drive-cd-disk{{media_index}},media=cdrom
+        {{/install_media}}
+
+    no-defaults:
+      flags:
+        - nodefaults
+        - nodefconfig
+        - no-user-config
+        - nographic
+      serial: none
+      parallel: none
+
+    memory-huge-pages:
+      flags:
+        - mem-prealloc
+      mem-path: /dev/hugepages
+
+    vga-passthrough:
+      device:
+        - vfio-pci,host=01:00.0,addr=09.0,multifunction=on
+        - vfio-pci,host=01:00.1,addr=09.1
+
+    usb-passthrough:
+      device:
+        - usb-host,vendorid=0x09da,productid=0x0260
+        - usb-host,vendorid=0x046d,productid=0xc01e
+        - usb-host,vendorid=0x046d,productid=0x0825

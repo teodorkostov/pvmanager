@@ -11,6 +11,8 @@ from pvmanager.abstract_base_controller import AbstractBaseController
 
 
 
+CREATE_USAGE = 'usage: ... vm create <VM name> <memory size in MB> <network interface name> [<installation media file path> ...]'
+
 class VmManager(AbstractBaseController):
   """The VM Manager handles the VM configurations in $prefix/vm/."""
 
@@ -55,11 +57,14 @@ class VmManager(AbstractBaseController):
     self.app.render(dict(data=self.vm_path.iterdir()), "list.m")
 
 
-  @expose(help='Create a new VM configuration in the current PREFIX.')
+  @expose(help="""
+    Create a new VM configuration.
+    {}
+  """.strip().format(CREATE_USAGE))
   def create(self):
     size = len(self.app.pargs.extra_arguments)
-    if 1 > size:
-      self.app.log.error('expected the VM name as an extra argument')
+    if 3 > size:
+      self.app.log.error(CREATE_USAGE)
       return
 
     vm_name = self.app.pargs.extra_arguments[0].safe_value
@@ -70,6 +75,21 @@ class VmManager(AbstractBaseController):
       return
 
     self._render(vm_instance_path)
+
+    template_arguments = {
+      'original_name': self.app.pargs.extra_arguments[0].original_value,
+      'safe_name': vm_instance_path.stem,
+      'memory_size_mb': self.app.pargs.extra_arguments[1].original_value,
+      'net_ifname': self.app.pargs.extra_arguments[2].original_value,
+      'install_media': []
+    }
+
+    media_index = 0
+    for argument in self.app.pargs.extra_arguments[3::]:
+      template_arguments['install_media'].append(dict(media_path=argument, media_index=media_index))
+      media_index += 1
+
+    self.app.render(template_arguments, 'app.yaml')
 
 
   @expose(help='Run a VM configuration from the current PREFIX.')

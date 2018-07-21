@@ -8,7 +8,7 @@ setup(name='pvmanager',
       license='MIT',
       packages=['pvmanager', 'pvmanager.templates', 'pvmanager.manager', 'pvmanager.manager.media'],
       package_data = {
-        '': ['*.m'],
+        '': ['*.m', '*.yaml'],
       },
       install_requires=[
         'cement',
