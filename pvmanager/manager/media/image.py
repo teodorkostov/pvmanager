@@ -10,6 +10,8 @@ from pvmanager.generic_media_controller import GenericMediaController
 
 
 
+USAGE = 'usage: ... image create <VM name> <size>'
+
 class ImageMediaManager(GenericMediaController):
   """The Image Media Manager handles the VM media in $prefix/media/image/."""
 
@@ -23,20 +25,24 @@ class ImageMediaManager(GenericMediaController):
     """
 
 
-  def _get_image_path(self, general_vm_name):
-    return self.media_path / '{}.raw'.format(general_vm_name)
+  def _get_file_path(self, file_name):
+    file_path = super(ImageMediaManager, self)._get_file_path(file_name)
+    return file_path.with_suffix('.raw')
 
 
-  @expose(help='Create a new VM image in the current PREFIX.')
+  @expose(help="""
+    Create a new VM image.
+    {}
+  """.strip().format(USAGE))
   def create(self):
     """Handler for the image creation."""
     size = len(self.app.pargs.extra_arguments)
     if 2 > size:
-      self.app.log.error('usage: ... image create <VM name> <size>')
+      self.app.log.error(USAGE)
       return
 
-    general_vm_name = self.app.pargs.extra_arguments[0]
-    vm_image_path = self._get_image_path(general_vm_name)
+    vm_name = self.app.pargs.extra_arguments[0]
+    vm_image_path = self._get_file_path(vm_name)
     vm_image_size = self.app.pargs.extra_arguments[1]
 
     if vm_image_path.exists():
@@ -47,31 +53,3 @@ class ImageMediaManager(GenericMediaController):
     subprocess_arguments = ['qemu-img', 'create', '-f', 'raw', vm_image_path, vm_image_size]
 
     subprocess.call(subprocess_arguments)
-
-
-  @expose(help='List all VM images in the current PREFIX.')
-  def list(self):
-    self.app.render(dict(data=self.media_path.iterdir()), "list.m")
-
-
-  @expose(help='Delete a VM image in current PREFIX.')
-  def delete(self):
-    size = len(self.app.pargs.extra_arguments)
-    if 1 > size:
-      self.app.log.error('usage: ... image delete <VM name>')
-      return
-
-    general_vm_name = self.app.pargs.extra_arguments[0]
-    vm_image_path = self._get_image_path(general_vm_name)
-
-    if not vm_image_path.exists():
-      return
-
-    user_confirmation = input('Confirm delete command (yes/no): ')
-
-    if 'yes' != user_confirmation:
-      return
-
-    self.app.log.info('deleting VM image {}'.format(vm_image_path))
-
-    vm_image_path.unlink()
