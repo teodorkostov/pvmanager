@@ -35,3 +35,7 @@ class GenericMediaController(AbstractBaseController):
     if not self.media_path.exists():
       app_obj.log.info('creating {} media path ({})'.format(self.Meta.label, self.media_path))
       self.media_path.mkdir(parents=True)
+
+
+  def _render(self, result):
+    print('  {}'.format(result))
