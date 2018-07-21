@@ -62,8 +62,8 @@ class VmManager(AbstractBaseController):
       self.app.log.error('expected the VM name as an extra argument')
       return
 
-    general_vm_name = self.app.pargs.extra_arguments[0]
-    vm_instance_path = self._get_vm_path(general_vm_name)
+    vm_name = self.app.pargs.extra_arguments[0].safe_value
+    vm_instance_path = self._get_vm_path(vm_name)
 
     if vm_instance_path.exists():
       self.app.log.error('a VM with the same name ({}) already exists'.format(vm_instance_path.stem))

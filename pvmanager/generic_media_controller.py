@@ -59,7 +59,7 @@ class GenericMediaController(AbstractBaseController):
       self.app.log.error('usage: ... delete <file name>')
       return
 
-    media_name = self.app.pargs.extra_arguments[0]
+    media_name = self.app.pargs.extra_arguments[0].safe_value
     media_path = self._get_file_path(media_name)
 
     if not media_path.exists():

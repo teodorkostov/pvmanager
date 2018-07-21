@@ -55,8 +55,8 @@ class ConfigManager(AbstractBaseController):
   def set(self):
     """The `set` command saves the desired config property to the config file."""
     if self._validate_extra_arguments(2):
-      prop_name = self.app.pargs.extra_arguments[0]
-      prop_value = self.app.pargs.extra_arguments[1]
+      prop_name = self.app.pargs.extra_arguments[0].original_value
+      prop_value = self.app.pargs.extra_arguments[1].original_value
 
       config = ConfigParser()
       config.read(self.config_path)

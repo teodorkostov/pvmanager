@@ -35,12 +35,25 @@ def convert_general_to_snake(general_name):
   return re.sub(r'^_|_$', '', snake_case)
 
 
-def process_extra_arguments(app):
-  """Converting extra arguments to safe snake case strings."""
+class ExtraArgument:
+  "Internal arguments for the application."
 
-  size = len(app.pargs.extra_arguments)
-  if 0 < size:
-    app.pargs.extra_arguments[0] = convert_general_to_snake(app.pargs.extra_arguments[0])
+  def __init__(self, string_value):
+    self.original_value = string_value
+    self.safe_value = convert_general_to_snake(string_value)
+
+  def __repr__(self):
+     return self.original_value
+
+
+def process_extra_arguments(app):
+  """Converting extra arguments to internal argument format."""
+
+  if hasattr(app.pargs, 'extra_arguments'):
+    size = len(app.pargs.extra_arguments)
+    if 0 < size:
+      app.pargs.extra_arguments = [ExtraArgument(argument) for argument in app.pargs.extra_arguments]
+
 
 
 class PVManagerApp(CementApp):

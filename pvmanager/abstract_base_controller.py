@@ -40,7 +40,7 @@ class AbstractBaseController(CementBaseController):
 
   def get_config(self, key):
     """Helper method to get config properties for the current application."""
-    return self.app.config.get(self.app_name, key)
+    return self.app.config.get(self.app_name, str(key))
 
 
   @expose(hide=True)

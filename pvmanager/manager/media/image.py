@@ -41,9 +41,9 @@ class ImageMediaManager(GenericMediaController):
       self.app.log.error(USAGE)
       return
 
-    vm_name = self.app.pargs.extra_arguments[0]
+    vm_name = self.app.pargs.extra_arguments[0].safe_value
     vm_image_path = self._get_file_path(vm_name)
-    vm_image_size = self.app.pargs.extra_arguments[1]
+    vm_image_size = self.app.pargs.extra_arguments[1].original_value
 
     if vm_image_path.exists():
       self.app.log.error(
