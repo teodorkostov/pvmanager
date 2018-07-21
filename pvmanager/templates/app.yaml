@@ -39,6 +39,7 @@ qemu:
       vga: qxl
       display: sdl
       boot: order=d
+      {{#has_install_media}}
       device:
         {{#install_media}}
         - ide-cd,drive=drive-cd-disk{{media_index}},id=cd-disk{{media_index}},unit=0,bus=ide.{{media_index}}
@@ -47,6 +48,7 @@ qemu:
         {{#install_media}}
         - file={{media_path}},if=none,id=drive-cd-disk{{media_index}},media=cdrom
         {{/install_media}}
+      {{/has_install_media}}
 
     no-defaults:
       flags:

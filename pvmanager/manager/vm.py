@@ -89,6 +89,8 @@ class VmManager(AbstractBaseController):
       template_arguments['install_media'].append(dict(media_path=argument, media_index=media_index))
       media_index += 1
 
+    template_arguments['has_install_media'] = 0 < len(template_arguments['install_media'])
+
     self.app.render(template_arguments, 'app.yaml')
 
 
