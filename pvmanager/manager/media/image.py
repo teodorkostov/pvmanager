@@ -52,3 +52,21 @@ class ImageMediaManager(GenericMediaController):
   @expose(help='List all VM images in the current PREFIX.')
   def list(self):
     self.app.render(dict(data=self.media_path.iterdir()), "list.m")
+
+
+  @expose(help='Delete a VM image in current PREFIX.')
+  def delete(self):
+    size = len(self.app.pargs.extra_arguments)
+    if 1 > size:
+      self.app.log.error('usage: ... image delete <VM name>')
+      return
+
+    general_vm_name = self.app.pargs.extra_arguments[0]
+    vm_image_path = self._get_image_path(general_vm_name)
+
+    if not vm_image_path.exists():
+      return
+
+    self.app.log.info('deleting VM image {}'.format(vm_image_path))
+
+    vm_image_path.unlink()
