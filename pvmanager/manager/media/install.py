@@ -8,7 +8,7 @@ from pvmanager.generic_media_controller import GenericMediaController
 
 
 class InstallMediaManager(GenericMediaController):
-  """The Install Media Manager handles the VM configurations in $prefix/vm/."""
+  """The Install Media Manager handles the install media in $prefix/media/install/."""
 
 
   class Meta:

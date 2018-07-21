@@ -11,6 +11,7 @@ from pvmanager.base_controller import BaseController
 from pvmanager.manager.config import ConfigManager
 from pvmanager.manager.media import MediaManager
 from pvmanager.manager.media.firmware import FirmwareMediaManager
+from pvmanager.manager.media.image import ImageMediaManager
 from pvmanager.manager.media.install import InstallMediaManager
 from pvmanager.manager.vm import VmManager
 
@@ -51,7 +52,7 @@ class PVManagerApp(CementApp):
     extensions = ["mustache"]
     output_handler = "mustache"
     base_controller = "base"
-    handlers = [BaseController, ConfigManager, MediaManager, FirmwareMediaManager, InstallMediaManager, VmManager]
+    handlers = [BaseController, ConfigManager, MediaManager, FirmwareMediaManager, ImageMediaManager, InstallMediaManager, VmManager]
     template_module = "pvmanager.templates"
     arguments_override_config = True
 

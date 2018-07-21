@@ -8,7 +8,7 @@ from pvmanager.generic_media_controller import GenericMediaController
 
 
 class FirmwareMediaManager(GenericMediaController):
-  """The Firmware Media Manager handles the VM configurations in $prefix/vm/."""
+  """The Firmware Media Manager handles the firmware media in $prefix/media/firmware/."""
 
 
   class Meta:
