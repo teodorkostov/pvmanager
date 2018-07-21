@@ -12,6 +12,7 @@ from pvmanager.abstract_base_controller import AbstractBaseController
 
 
 CREATE_USAGE = 'usage: ... vm create <VM name> <memory size in MB> <network interface name> [<installation media file path> ...]'
+RUN_USAGE = 'usage: ... vm run <VM name> [<mode>]'
 
 class VmManager(AbstractBaseController):
   """The VM Manager handles the VM configurations in $prefix/vm/."""
@@ -67,8 +68,7 @@ class VmManager(AbstractBaseController):
       self.app.log.error(CREATE_USAGE)
       return
 
-    vm_name = self.app.pargs.extra_arguments[0].safe_value
-    vm_instance_path = self._get_vm_path(vm_name)
+    vm_instance_path = self._get_vm_path(self.app.pargs.extra_arguments[0].safe_value)
 
     if vm_instance_path.exists():
       self.app.log.error('a VM with the same name ({}) already exists'.format(vm_instance_path.stem))
@@ -101,7 +101,7 @@ class VmManager(AbstractBaseController):
       self.app.log.error('expected the VM name as an extra argument')
       return
 
-    vm_instance_path = self._get_vm_path(self.app.pargs.extra_arguments[0])
+    vm_instance_path = self._get_vm_path(self.app.pargs.extra_arguments[0].safe_value)
 
     if not vm_instance_path.exists():
       self.app.log.error('the selected VM ({}) does not exist'.format(vm_instance_path.stem))
@@ -110,5 +110,13 @@ class VmManager(AbstractBaseController):
     self.app.log.info('running VM "{}"'.format(vm_instance_path.stem))
 
     with vm_instance_path.open() as stream:
-      vm_instance = yaml.load(stream)
+      vm_run_mode = self.app.pargs.extra_arguments[1].original_value if 1 < len(self.app.pargs.extra_arguments) else 'default'
+      vm_instance = list(yaml.load_all(stream))
+      self._render(vm_run_mode)
       self._render(vm_instance)
+
+      base = vm_instance[1]['qemu']['config']['base']
+      install = vm_instance[1]['qemu']['config']['install']
+      self._render(base)
+      self._render(install)
+      self._render({**base, **install})
