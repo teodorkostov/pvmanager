@@ -47,3 +47,8 @@ class ImageMediaManager(GenericMediaController):
     subprocess_arguments = ['qemu-img', 'create', '-f', 'raw', vm_image_path, vm_image_size]
 
     subprocess.call(subprocess_arguments)
+
+
+  @expose(help='List all VM images in the current PREFIX.')
+  def list(self):
+    self.app.render(dict(data=self.media_path.iterdir()), "list.m")
