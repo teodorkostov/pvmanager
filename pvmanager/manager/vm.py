@@ -104,7 +104,7 @@ class VmManager(AbstractBaseController):
     self.app.log.info('running VM "{}"'.format(vm_instance_path.stem))
 
     with vm_instance_path.open() as stream:
-      vm_instance = list(yaml.load_all(stream))[1]
+      vm_instance = yaml.load(stream)
 
       vm_run_mode = self.app.pargs.extra_arguments[1].original_value if 1 < len(self.app.pargs.extra_arguments) else 'default'
       run_options = vm_instance['qemu']['run'][vm_run_mode]
