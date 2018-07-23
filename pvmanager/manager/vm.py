@@ -110,29 +110,31 @@ class VmManager(AbstractBaseController):
     self.app.log.info('running VM "{}"'.format(vm_instance_path.stem))
 
     with vm_instance_path.open() as stream:
-      vm_run_mode = self.app.pargs.extra_arguments[1].original_value if 1 < len(self.app.pargs.extra_arguments) else 'default'
       vm_instance = list(yaml.load_all(stream))[1]
-      self._render(vm_run_mode)
-      self._render(vm_instance)
 
-      base = vm_instance['qemu']['config']['base']
-      install = vm_instance['qemu']['config']['install']
-      self._render(base)
-      self._render(install)
-      qemu_options = {**base, **install}
-      self._render(qemu_options)
+      vm_run_mode = self.app.pargs.extra_arguments[1].original_value if 1 < len(self.app.pargs.extra_arguments) else 'default'
+      run_options = vm_instance['qemu']['run'][vm_run_mode]
 
-      subprocess_arguments = []
+      self.app.log.info('running configuration: {}'.format(vm_run_mode))
+      self.app.log.info('components: {}'.format(run_options))
+
+      qemu_options = {}
+      for run_option in run_options:
+        config_option = vm_instance['qemu']['config'][run_option]
+        qemu_options = {**qemu_options, **config_option}
+
+      self.app.log.debug('QEMU options: {}'.format(qemu_options))
+
+      qemu_arguments = []
       for option, payload in qemu_options.items():
-        print('option {} is {}'.format(payload, type(payload)))
         if isinstance(payload, list):
           for value in payload:
-            print(value)
-            subprocess_arguments.append('-{}'.format(option))
-            subprocess_arguments.append(value)
+            qemu_arguments.append('-{}'.format(option))
+            qemu_arguments.append(value)
         else:
-          subprocess_arguments.append('-{}'.format(option))
-          subprocess_arguments.append(payload)
+          qemu_arguments.append('-{}'.format(option))
+          qemu_arguments.append(payload)
 
-      print('>>> ready')
-      print(subprocess_arguments)
+      self.app.log.debug('QEMU arguments: {}'.format(qemu_arguments))
+
+      print(qemu_arguments)
