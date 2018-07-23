@@ -18,8 +18,7 @@ qemu:
       cpu: host,kvm=off,hv_vapic,hv_time,hv_relaxed,hv_spinlocks=0x1fff,hv_vendor_id=sugoidesu
       smp: sockets=1,cores=3,threads=1
       m: {{memory_size_mb}}
-      flags:
-        - enable-kvm
+      enable-kvm:
       device:
         - ich9-usb-uhci3,id=uhci
         - usb-ehci,id=ehci
@@ -51,17 +50,15 @@ qemu:
       {{/has_install_media}}
 
     no-defaults:
-      flags:
-        - nodefaults
-        - nodefconfig
-        - no-user-config
-        - nographic
+      nodefaults:
+      nodefconfig:
+      no-user-config:
+      nographic:
       serial: none
       parallel: none
 
     memory-huge-pages:
-      flags:
-        - mem-prealloc
+      mem-prealloc:
       mem-path: /dev/hugepages
 
     vga-passthrough:
