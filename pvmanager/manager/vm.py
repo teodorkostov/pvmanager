@@ -111,12 +111,28 @@ class VmManager(AbstractBaseController):
 
     with vm_instance_path.open() as stream:
       vm_run_mode = self.app.pargs.extra_arguments[1].original_value if 1 < len(self.app.pargs.extra_arguments) else 'default'
-      vm_instance = list(yaml.load_all(stream))
+      vm_instance = list(yaml.load_all(stream))[1]
       self._render(vm_run_mode)
       self._render(vm_instance)
 
-      base = vm_instance[1]['qemu']['config']['base']
-      install = vm_instance[1]['qemu']['config']['install']
+      base = vm_instance['qemu']['config']['base']
+      install = vm_instance['qemu']['config']['install']
       self._render(base)
       self._render(install)
-      self._render({**base, **install})
+      qemu_options = {**base, **install}
+      self._render(qemu_options)
+
+      subprocess_arguments = []
+      for option, payload in qemu_options.items():
+        print('option {} is {}'.format(payload, type(payload)))
+        if isinstance(payload, list):
+          for value in payload:
+            print(value)
+            subprocess_arguments.append('-{}'.format(option))
+            subprocess_arguments.append(value)
+        else:
+          subprocess_arguments.append('-{}'.format(option))
+          subprocess_arguments.append(payload)
+
+      print('>>> ready')
+      print(subprocess_arguments)
