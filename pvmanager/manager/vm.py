@@ -70,12 +70,6 @@ class VmManager(AbstractBaseController):
 
     vm_instance_path = self._get_vm_path(self.app.pargs.extra_arguments[0].safe_value)
 
-    if vm_instance_path.exists():
-      self.app.log.error('a VM with the same name ({}) already exists'.format(vm_instance_path.stem))
-      return
-
-    self._render(vm_instance_path)
-
     template_arguments = {
       'original_name': self.app.pargs.extra_arguments[0].original_value,
       'safe_name': vm_instance_path.stem,
