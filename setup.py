@@ -12,7 +12,8 @@ setup(name='pvmanager',
       },
       install_requires=[
         'cement',
-        'humanfriendly'
+        'humanfriendly',
+        'pystache'
       ],
       scripts=['bin/pvmanager'],
       zip_safe=False)
