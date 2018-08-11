@@ -31,7 +31,7 @@ qemu:
       boot: order=c
       net:
         - nic,model=virtio
-        - tap,ifname={{net_ifname}},script=no,downscript=no
+        - tap,ifname={{network_interface}},script=no,downscript=no
       soundhw: hda
 
     install:

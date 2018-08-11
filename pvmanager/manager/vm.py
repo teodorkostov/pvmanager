@@ -12,7 +12,7 @@ from pvmanager.abstract_base_controller import AbstractBaseController
 
 
 
-CREATE_USAGE = 'usage: ... vm create <VM name> <memory size> <network interface name> [<installation media file path> ...]'
+CREATE_USAGE = 'usage: ... vm create <VM name> [<installation media file path> ...]'
 RUN_USAGE = 'usage: ... vm run <VM name> [<mode>]'
 
 class VmManager(AbstractBaseController):
@@ -25,7 +25,14 @@ class VmManager(AbstractBaseController):
     VM manager handles the VM configurations.
     All VM config files are located at $prefix/vm/.
     """
+    config_defaults = dict(
+      memory='3G',
+      network_interface='tap0'
+    )
     arguments = [
+      (['-m', '--memory'], dict(action='store', help='[K, KB, KiB, M, G, ...] VM memory size ({})'.format(config_defaults['memory']))),
+      (['-n', '--network-interface'], dict(action='store', help='network interface name ({})'.format(config_defaults['network_interface']))),
+      (['-s', '--sound'], dict(action='store', help='[pa, alsa] sound configuration')),
       (['extra_arguments'], dict(action='store', nargs='*'))
     ]
 
@@ -65,7 +72,7 @@ class VmManager(AbstractBaseController):
   """.strip().format(CREATE_USAGE))
   def create(self):
     size = len(self.app.pargs.extra_arguments)
-    if 3 > size:
+    if 1 > size:
       self.app.log.error(CREATE_USAGE)
       return
 
@@ -74,13 +81,13 @@ class VmManager(AbstractBaseController):
     template_arguments = {
       'original_name': self.app.pargs.extra_arguments[0].original_value,
       'safe_name': vm_instance_path.stem,
-      'memory_size': parse_size(self.app.pargs.extra_arguments[1].original_value, binary=True),
-      'net_ifname': self.app.pargs.extra_arguments[2].original_value,
+      'memory_size': parse_size(self.get_config('memory'), binary=True),
+      'network_interface': self.get_config('network_interface'),
       'install_media': []
     }
 
     media_index = 0
-    for argument in self.app.pargs.extra_arguments[3::]:
+    for argument in self.app.pargs.extra_arguments[1::]:
       template_arguments['install_media'].append(dict(media_path=argument, media_index=media_index))
       media_index += 1
 
