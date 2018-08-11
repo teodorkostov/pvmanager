@@ -21,6 +21,7 @@ class AbstractBaseController(CementBaseController):
     """The meta configuration options for all controllers."""
     stacked_on = 'base'
     stacked_type = 'nested'
+    config_section = 'pvmanager'
 
 
   def __init__(self):
