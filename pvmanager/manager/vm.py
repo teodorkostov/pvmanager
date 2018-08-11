@@ -6,12 +6,13 @@ from pathlib import Path
 import yaml
 
 from cement.core.controller import expose
+from humanfriendly import parse_size
 
 from pvmanager.abstract_base_controller import AbstractBaseController
 
 
 
-CREATE_USAGE = 'usage: ... vm create <VM name> <memory size in MB> <network interface name> [<installation media file path> ...]'
+CREATE_USAGE = 'usage: ... vm create <VM name> <memory size> <network interface name> [<installation media file path> ...]'
 RUN_USAGE = 'usage: ... vm run <VM name> [<mode>]'
 
 class VmManager(AbstractBaseController):
@@ -73,7 +74,7 @@ class VmManager(AbstractBaseController):
     template_arguments = {
       'original_name': self.app.pargs.extra_arguments[0].original_value,
       'safe_name': vm_instance_path.stem,
-      'memory_size_mb': self.app.pargs.extra_arguments[1].original_value,
+      'memory_size': parse_size(self.app.pargs.extra_arguments[1].original_value, binary=True),
       'net_ifname': self.app.pargs.extra_arguments[2].original_value,
       'install_media': []
     }

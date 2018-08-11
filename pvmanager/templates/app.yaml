@@ -17,7 +17,7 @@ qemu:
       name: {{original_name}}
       cpu: host,kvm=off,hv_vapic,hv_time,hv_relaxed,hv_spinlocks=0x1fff,hv_vendor_id=sugoidesu
       smp: sockets=1,cores=3,threads=1
-      m: {{memory_size_mb}}
+      m: {{memory_size}}
       enable-kvm:
       device:
         - ich9-usb-uhci3,id=uhci
