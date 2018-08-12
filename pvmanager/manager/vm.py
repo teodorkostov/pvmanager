@@ -146,6 +146,7 @@ class VmManager(AbstractBaseController):
       self.app.log.info('running configuration: {}'.format(vm_run_mode))
       self.app.log.info('components: {}'.format(run_options))
 
+      # prepare dict of run configurations
       qemu_options = {}
       for run_option in run_options:
         config_option = vm_instance['qemu']['config'][run_option]
@@ -153,6 +154,7 @@ class VmManager(AbstractBaseController):
 
       self.app.log.debug('QEMU options: {}'.format(qemu_options))
 
+      # prepare the qemu arguments
       qemu_arguments = []
       for option, payload in qemu_options.items():
         if isinstance(payload, list):
@@ -165,4 +167,16 @@ class VmManager(AbstractBaseController):
 
       self.app.log.debug('QEMU arguments: {}'.format(qemu_arguments))
 
+      # prepare the audio options
+      audio_arguments = ['VM_AUDIO=""']
+      audio_options = vm_instance['qemu']['config'].get(AUDIO_KEY)
+      print(audio_options)
+      if audio_options is not None:
+        for option, value in audio_options.items():
+          value = value if value is not None else 'null'
+          audio_arguments.append('VM_AUDIO="$VM_AUDIO {}={}'.format(option, value))
+
+      self.app.log.debug('audio arguments: {}'.format(audio_arguments))
+
+      print(audio_arguments)
       print(qemu_arguments)
