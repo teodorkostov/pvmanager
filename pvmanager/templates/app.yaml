@@ -13,11 +13,19 @@ qemu:
 
 
   config:
+    {{#has_sound}}
+    # check "qemu-system-x86_64 -audio-help" for more information
+    sound:
+      {{#sound}}
+      {{key}}: {{value}}
+      {{/sound}}
+
+    {{/has_sound}}
     base:
       name: {{original_name}}
       cpu: host,kvm=off,hv_vapic,hv_time,hv_relaxed,hv_spinlocks=0x1fff,hv_vendor_id=sugoidesu
       smp: sockets=1,cores=3,threads=1
-      m: {{memory_size}}
+      m: {{memory}}
       enable-kvm:
       device:
         - ich9-usb-uhci3,id=uhci

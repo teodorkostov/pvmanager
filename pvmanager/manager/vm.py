@@ -15,6 +15,11 @@ from pvmanager.abstract_base_controller import AbstractBaseController
 CREATE_USAGE = 'usage: ... vm create <VM name> [<installation media file path> ...]'
 RUN_USAGE = 'usage: ... vm run <VM name> [<mode>]'
 
+INSTALL_MEDIA_KEY = 'install_media'
+MEMORY_KEY = 'memory'
+NETWORK_INTERFACE_KEY = 'network_interface'
+SOUND_KEY = 'sound'
+
 class VmManager(AbstractBaseController):
   """The VM Manager handles the VM configurations in $prefix/vm/."""
 
@@ -30,8 +35,8 @@ class VmManager(AbstractBaseController):
       network_interface='tap0'
     )
     arguments = [
-      (['-m', '--memory'], dict(action='store', help='[K, KB, KiB, M, G, ...] VM memory size ({})'.format(config_defaults['memory']))),
-      (['-n', '--network-interface'], dict(action='store', help='network interface name ({})'.format(config_defaults['network_interface']))),
+      (['-m', '--memory'], dict(action='store', help='[K, KB, KiB, M, G, ...] VM memory size ({})'.format(config_defaults[MEMORY_KEY]))),
+      (['-n', '--network-interface'], dict(action='store', help='network interface name ({})'.format(config_defaults[NETWORK_INTERFACE_KEY]))),
       (['-s', '--sound'], dict(action='store', help='[pa, alsa] sound configuration')),
       (['extra_arguments'], dict(action='store', nargs='*'))
     ]
@@ -46,7 +51,7 @@ class VmManager(AbstractBaseController):
     """The VM controller setup."""
     super(VmManager, self)._setup(app_obj)
 
-    self.vm_path = Path(self.get_config('prefix')) / 'vm'
+    self.vm_path = Path(self.get_config('prefix')) / self.Meta.label
 
     if not self.vm_path.exists():
       app_obj.log.info('creating VM path ({})'.format(self.vm_path))
@@ -78,20 +83,41 @@ class VmManager(AbstractBaseController):
 
     vm_instance_path = self._get_vm_path(self.app.pargs.extra_arguments[0].safe_value)
 
+    # prepare the general template
     template_arguments = {
       'original_name': self.app.pargs.extra_arguments[0].original_value,
       'safe_name': vm_instance_path.stem,
-      'memory_size': parse_size(self.get_config('memory'), binary=True),
-      'network_interface': self.get_config('network_interface'),
-      'install_media': []
+      MEMORY_KEY: parse_size(self.get_config(MEMORY_KEY), binary=True),
+      NETWORK_INTERFACE_KEY: self.get_config(NETWORK_INTERFACE_KEY),
+      INSTALL_MEDIA_KEY: []
     }
 
+    # prepare the installation media
     media_index = 0
     for argument in self.app.pargs.extra_arguments[1::]:
-      template_arguments['install_media'].append(dict(media_path=argument, media_index=media_index))
+      template_arguments[INSTALL_MEDIA_KEY].append(dict(media_path=argument, media_index=media_index))
       media_index += 1
 
-    template_arguments['has_install_media'] = 0 < len(template_arguments['install_media'])
+    template_arguments['has_{}'.format(INSTALL_MEDIA_KEY)] = 0 < len(template_arguments[INSTALL_MEDIA_KEY])
+
+    # prepare the sound config
+    sound_driver = self.app.pargs.sound
+    if 'pa' == sound_driver:
+      template_arguments[SOUND_KEY] = [
+        {'key': 'QEMU_AUDIO_DRV', 'value': 'pa'}
+      ]
+    elif 'alsa' == sound_driver:
+      template_arguments[SOUND_KEY] = [
+        {'key': 'QEMU_AUDIO_DAC_FIXED_FREQ', 'value': 192000},
+        {'key': 'QEMU_AUDIO_DAC_FIXED_FMT', 'value': 'S32'},
+        {'key': 'QEMU_AUDIO_DRV', 'value': 'alsa'},
+        {'key': 'QEMU_ALSA_DAC_DEV', 'value': 'default'},
+        {'key': 'QEMU_ALSA_DAC_PERIOD_SIZE', 'value': 512},
+        {'key': 'QEMU_ALSA_DAC_BUFFER_SIZE', 'value': 8192},
+        {'key': 'QEMU_ALSA_ADC_DEV', 'value': 'null'}
+      ]
+
+    template_arguments['has_{}'.format(SOUND_KEY)] = None != sound_driver
 
     self.app.render(template_arguments, 'app.yaml')
 
