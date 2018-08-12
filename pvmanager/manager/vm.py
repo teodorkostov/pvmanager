@@ -150,12 +150,14 @@ class VmManager(VmBaseManager):
       # preparing the memory limits
       memory_size = parse_size(memory_option, binary=True)
 
+      # magic megabyte
       handler = create_handler(memory_size + 1024 * 1024)
 
       self.app.log.info('starting VM from PID({})'.format(os.getpid()))
       child_process = subprocess.Popen(qemu_arguments, env={**os.environ.copy(), **audio_arguments}, preexec_fn=handler)
+      self.app.log.info('started VM with PID({})'.format(child_process.pid))
       child_process.wait()
-      self.app.log.info('stopping VM from PID({})'.format(os.getpid()))
+      self.app.log.info('VM stopped')
 
 
 
