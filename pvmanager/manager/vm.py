@@ -3,6 +3,7 @@ This VmManager and the VM configuration functionality.
 """
 
 from pathlib import Path
+import subprocess
 import yaml
 
 from cement.core.controller import expose
@@ -157,6 +158,42 @@ class VmCreateManager(VmBaseManager):
 
   @expose(hide=True)
   def default(self):
+    """Default command handler just prints out the help information."""
+    size = len(self.app.pargs.extra_arguments)
+    if 1 > size:
+      self.app.args.print_help()
+      return
+
+    vm_instance_path = self._get_vm_path(self.app.pargs.extra_arguments[0].safe_value)
+
+    if vm_instance_path.exists():
+      self.app.log.error('the selected VM ({}) already exists'.format(vm_instance_path.stem))
+      return
+
+    subprocess_arguments = ['pvmanager', 'vm', 'create', 'render']
+
+    for argument, value in self.app.pargs.__dict__.items():
+      if 'debug' == argument:
+        continue
+      if 'suppress_output' == argument:
+        continue
+      if 'extra_arguments' == argument:
+        continue
+      if value is not None:
+        subprocess_arguments.append('--{}={}'.format(argument, value))
+
+    subprocess_arguments.extend(map(str, self.app.pargs.extra_arguments))
+
+    self.app.log.debug('render arguments: {}'.format(subprocess_arguments))
+
+    with vm_instance_path.open('w') as stream:
+      subprocess.call(subprocess_arguments, stdout=stream)
+
+    self.app.log.info('successfully created new VM {}'.format(vm_instance_path.stem))
+
+
+  @expose(hide=True)
+  def render(self):
     """Default command handler just prints out the help information."""
     size = len(self.app.pargs.extra_arguments)
     if 1 > size:
