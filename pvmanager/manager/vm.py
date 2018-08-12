@@ -12,8 +12,8 @@ from pvmanager.abstract_base_controller import AbstractBaseController
 
 
 
-CREATE_USAGE = 'usage: ... vm create <VM name> [<installation media file path> ...]'
-RUN_USAGE = 'usage: ... vm run <VM name> [<mode>]'
+CREATE_USAGE = 'usage: ... <VM name> [<installation media file path> ...]'
+RUN_USAGE = 'usage: ... <VM name> [<mode>]'
 
 INSTALL_MEDIA_KEY = 'install_media'
 MEMORY_KEY = 'memory'
@@ -56,10 +56,6 @@ class VmManager(AbstractBaseController):
     if not self.vm_path.exists():
       app_obj.log.info('creating VM path ({})'.format(self.vm_path))
       self.vm_path.mkdir()
-
-
-  def _render(self, result):
-    print('  {}'.format(result))
 
 
   def _get_vm_path(self, general_vm_name):
