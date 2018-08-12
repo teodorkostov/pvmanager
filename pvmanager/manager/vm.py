@@ -96,7 +96,11 @@ class VmManager(VmBaseManager):
       qemu_options = {}
       for run_option in run_options:
         config_option = vm_instance['qemu']['config'][run_option]
-        qemu_options = {**qemu_options, **config_option}
+        for key, value in config_option.items():
+          if key in qemu_options:
+            qemu_options[key] += value
+          else:
+            qemu_options[key] = value
 
       self.app.log.debug('QEMU options: {}'.format(qemu_options))
 
