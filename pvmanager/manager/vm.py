@@ -26,11 +26,6 @@ AUDIO_KEY = 'audio'
 class VmBaseManager(AbstractBaseController):
   """The VM Base Manager sets up the default functionality needed by a VM manager"""
 
-  class Meta:
-    """The VM Base Manager meta configuration."""
-    arguments = [
-        (['extra_arguments'], dict(action='store', nargs='*'))
-    ]
 
   def __init__(self):
     AbstractBaseController.__init__(self)
@@ -63,6 +58,9 @@ class VmManager(VmBaseManager):
     VM manager handles the VM configurations.
     All VM config files are located at $prefix/vm/.
     """
+    arguments = [
+        (['extra_arguments'], dict(action='store', nargs='*'))
+    ]
 
 
   @expose(help='List all VM configurations in the current PREFIX.')
@@ -153,7 +151,8 @@ class VmCreateManager(VmBaseManager):
     arguments = [
         (['-a', '--audio'], dict(action='store', help='[pa, alsa] audio configuration')),
         (['-m', '--memory'], dict(action='store', help='[K, KB, KiB, M, G, ...] VM memory size ({})'.format(config_defaults[MEMORY_KEY]))),
-        (['-n', '--network-interface'], dict(action='store', help='network interface name ({})'.format(config_defaults[NETWORK_INTERFACE_KEY])))
+        (['-n', '--network-interface'], dict(action='store', help='network interface name ({})'.format(config_defaults[NETWORK_INTERFACE_KEY]))),
+        (['extra_arguments'], dict(action='store', nargs='*'))
     ]
 
   @expose(hide=True)
