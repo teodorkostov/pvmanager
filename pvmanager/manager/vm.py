@@ -87,7 +87,7 @@ class VmManager(AbstractBaseController):
     template_arguments = {
       'original_name': self.app.pargs.extra_arguments[0].original_value,
       'safe_name': vm_instance_path.stem,
-      MEMORY_KEY: parse_size(self.get_config(MEMORY_KEY), binary=True),
+      MEMORY_KEY: self.get_config(MEMORY_KEY),
       NETWORK_INTERFACE_KEY: self.get_config(NETWORK_INTERFACE_KEY),
       INSTALL_MEDIA_KEY: []
     }
@@ -156,7 +156,10 @@ class VmManager(AbstractBaseController):
 
       # prepare the qemu arguments
       qemu_arguments = []
+      memory_argument = None
       for option, payload in qemu_options.items():
+        if 'm' == option:
+          memory_argument = payload
         if isinstance(payload, list):
           for value in payload:
             qemu_arguments.append('-{}'.format(option))
@@ -177,5 +180,6 @@ class VmManager(AbstractBaseController):
 
       self.app.log.debug('audio arguments: {}'.format(audio_arguments))
 
+      print(memory_argument)
       print(audio_arguments)
       print(qemu_arguments)
