@@ -101,11 +101,11 @@ class VmManager(VmBaseManager):
       self.app.log.debug('QEMU options: {}'.format(qemu_options))
 
       # prepare the qemu arguments
-      qemu_arguments = []
-      memory_argument = None
+      qemu_arguments = ['taskset', '-c', '1-3', 'qemu-system-x86_64']
+      memory_option = None
       for option, payload in qemu_options.items():
         if 'm' == option:
-          memory_argument = payload
+          memory_option = payload
         if isinstance(payload, list):
           for value in payload:
             qemu_arguments.append('-{}'.format(option))
@@ -114,6 +114,7 @@ class VmManager(VmBaseManager):
           qemu_arguments.append('-{}'.format(option))
           qemu_arguments.append(payload)
 
+      self.app.log.debug('memory option: {}'.format(memory_option))
       self.app.log.debug('QEMU arguments: {}'.format(qemu_arguments))
 
       # prepare the audio options
@@ -121,6 +122,12 @@ class VmManager(VmBaseManager):
 
       self.app.log.debug('audio arguments: {}'.format(audio_arguments))
 
+      # preparing the memory limits
+      memory_size = parse_size(memory_option, binary=True)
+      memory_argument = int(memory_size / 1024) + 1024
+
+      print(memory_option)
+      print(memory_size)
       print(memory_argument)
       print(audio_arguments)
       print(qemu_arguments)
