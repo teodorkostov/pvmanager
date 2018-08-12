@@ -2,8 +2,11 @@
 This VmManager and the VM configuration functionality.
 """
 
+import os
 from pathlib import Path
+import resource
 import subprocess
+import sys
 import yaml
 
 from cement.core.controller import expose
@@ -20,6 +23,21 @@ INSTALL_MEDIA_KEY = 'install_media'
 MEMORY_KEY = 'memory'
 NETWORK_INTERFACE_KEY = 'network_interface'
 AUDIO_KEY = 'audio'
+
+
+
+def create_handler(memory_size_bytes):
+  def handler():
+    # pid = os.getpid()
+    # ps = psutil.Process(pid)
+    # ps.set_nice(10)
+    try:
+      resource.setrlimit(resource.RLIMIT_MEMLOCK, (memory_size_bytes, memory_size_bytes))
+    except:
+      print("Unexpected error:", sys.exc_info()[0])
+      raise
+
+  return handler
 
 
 
@@ -118,23 +136,26 @@ class VmManager(VmBaseManager):
           qemu_arguments.append('-{}'.format(option))
           qemu_arguments.append(payload)
 
+      qemu_arguments = [value for value in qemu_arguments if value is not None]
+
       self.app.log.debug('memory option: {}'.format(memory_option))
       self.app.log.debug('QEMU arguments: {}'.format(qemu_arguments))
 
       # prepare the audio options
       audio_arguments = vm_instance['qemu']['config'].get(AUDIO_KEY)
+      audio_arguments = {key: str(value) if value is not None else 'null' for key, value in audio_arguments.items()}
 
       self.app.log.debug('audio arguments: {}'.format(audio_arguments))
 
       # preparing the memory limits
       memory_size = parse_size(memory_option, binary=True)
-      memory_argument = int(memory_size / 1024) + 1024
 
-      print(memory_option)
-      print(memory_size)
-      print(memory_argument)
-      print(audio_arguments)
-      print(qemu_arguments)
+      handler = create_handler(memory_size + 1024 * 1024)
+
+      self.app.log.info('starting VM from PID({})'.format(os.getpid()))
+      child_process = subprocess.Popen(qemu_arguments, env={**os.environ.copy(), **audio_arguments}, preexec_fn=handler)
+      child_process.wait()
+      self.app.log.info('stopping VM from PID({})'.format(os.getpid()))
 
 
 
