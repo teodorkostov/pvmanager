@@ -117,12 +117,7 @@ class VmManager(VmBaseManager):
       self.app.log.debug('QEMU arguments: {}'.format(qemu_arguments))
 
       # prepare the audio options
-      audio_arguments = ''
-      audio_options = vm_instance['qemu']['config'].get(AUDIO_KEY)
-      if audio_options is not None:
-        for option, value in audio_options.items():
-          value = value if value is not None else 'null'
-          audio_arguments = '{} {}={}'.format(audio_arguments, option, value)
+      audio_arguments = vm_instance['qemu']['config'].get(AUDIO_KEY)
 
       self.app.log.debug('audio arguments: {}'.format(audio_arguments))
 
