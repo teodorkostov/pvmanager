@@ -13,14 +13,14 @@ qemu:
 
 
   config:
-    {{#has_sound}}
+    {{#has_audio}}
     # check "qemu-system-x86_64 -audio-help" for more information
-    sound:
-      {{#sound}}
+    audio:
+      {{#audio}}
       {{key}}: {{value}}
-      {{/sound}}
+      {{/audio}}
 
-    {{/has_sound}}
+    {{/has_audio}}
     base:
       name: {{original_name}}
       cpu: host,kvm=off,hv_vapic,hv_time,hv_relaxed,hv_spinlocks=0x1fff,hv_vendor_id=sugoidesu

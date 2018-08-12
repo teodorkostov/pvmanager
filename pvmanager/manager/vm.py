@@ -18,7 +18,7 @@ RUN_USAGE = 'usage: ... vm run <VM name> [<mode>]'
 INSTALL_MEDIA_KEY = 'install_media'
 MEMORY_KEY = 'memory'
 NETWORK_INTERFACE_KEY = 'network_interface'
-SOUND_KEY = 'sound'
+AUDIO_KEY = 'audio'
 
 class VmManager(AbstractBaseController):
   """The VM Manager handles the VM configurations in $prefix/vm/."""
@@ -35,9 +35,9 @@ class VmManager(AbstractBaseController):
       network_interface='tap0'
     )
     arguments = [
+      (['-a', '--audio'], dict(action='store', help='[pa, alsa] audio configuration')),
       (['-m', '--memory'], dict(action='store', help='[K, KB, KiB, M, G, ...] VM memory size ({})'.format(config_defaults[MEMORY_KEY]))),
       (['-n', '--network-interface'], dict(action='store', help='network interface name ({})'.format(config_defaults[NETWORK_INTERFACE_KEY]))),
-      (['-s', '--sound'], dict(action='store', help='[pa, alsa] sound configuration')),
       (['extra_arguments'], dict(action='store', nargs='*'))
     ]
 
@@ -100,14 +100,14 @@ class VmManager(AbstractBaseController):
 
     template_arguments['has_{}'.format(INSTALL_MEDIA_KEY)] = 0 < len(template_arguments[INSTALL_MEDIA_KEY])
 
-    # prepare the sound config
-    sound_driver = self.app.pargs.sound
-    if 'pa' == sound_driver:
-      template_arguments[SOUND_KEY] = [
+    # prepare the audio config
+    audio_driver = self.app.pargs.audio
+    if 'pa' == audio_driver:
+      template_arguments[AUDIO_KEY] = [
         {'key': 'QEMU_AUDIO_DRV', 'value': 'pa'}
       ]
-    elif 'alsa' == sound_driver:
-      template_arguments[SOUND_KEY] = [
+    elif 'alsa' == audio_driver:
+      template_arguments[AUDIO_KEY] = [
         {'key': 'QEMU_AUDIO_DAC_FIXED_FREQ', 'value': 192000},
         {'key': 'QEMU_AUDIO_DAC_FIXED_FMT', 'value': 'S32'},
         {'key': 'QEMU_AUDIO_DRV', 'value': 'alsa'},
@@ -117,7 +117,7 @@ class VmManager(AbstractBaseController):
         {'key': 'QEMU_ALSA_ADC_DEV', 'value': 'null'}
       ]
 
-    template_arguments['has_{}'.format(SOUND_KEY)] = None != sound_driver
+    template_arguments['has_{}'.format(AUDIO_KEY)] = None != audio_driver
 
     self.app.render(template_arguments, 'app.yaml')
 
