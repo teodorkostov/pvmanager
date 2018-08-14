@@ -1,8 +1,3 @@
-"""
-The module handling around the main application objects.
-"""
-
-from pathlib import Path
 # Copyright (C) 2018 Teodor Kostov
 #
 # This file is part of Python VM Manager.
@@ -20,6 +15,11 @@ from pathlib import Path
 # You should have received a copy of the GNU General Public License
 # along with Python VM Manager.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+The module handling around the main application objects.
+"""
+
+from pathlib import Path
 import re
 
 from cement.core.foundation import CementApp
