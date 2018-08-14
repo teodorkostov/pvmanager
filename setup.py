@@ -5,9 +5,9 @@ setup(name='pvmanager',
       description='A VM manager written in Python.',
       url='http://github.com/terusus/pvmanager',
       author='Teodor Kostov',
-      license='MIT',
+      license='GPLv3',
       packages=['pvmanager', 'pvmanager.templates', 'pvmanager.manager', 'pvmanager.manager.media'],
-      package_data = {
+      package_data={
         '': ['*.m', '*.yaml'],
       },
       install_requires=[
