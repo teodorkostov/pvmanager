@@ -2,7 +2,7 @@
 
 Python VM Manager aims to provide a unified interface for managing VMs with the goal to extract the configuration aspects in a human readable format ([YAML](http://yaml.org/)).
 
-In essense PVManager is a lightweight CLI wrapper for [QEMU](https://www.qemu.org/). However, with PCI or VGA passthrough, various images and tunning options the list of QEMU arguments becomes longer and longer. On top of that with every execution there are a number of additional commands that have to affect the QEMU process - like memory limits, prioritization and affinity. Running in a different mode (e.g. during installation or normal work) is quite annoying copy-pasting. Managing this with Bash scripts becomes hard especially when it has to be done for multiple VMs.
+In essense PVManager is a CLI wrapper for [QEMU](https://www.qemu.org/). However, with PCI or VGA passthrough, various images and tunning options the list of QEMU arguments becomes longer and longer. On top of that with every execution there are a number of additional commands that have to affect the QEMU process - like memory limits, prioritization and affinity. Running in a different mode (e.g. during installation or normal work) is quite annoying copy-pasting. Managing this with Bash scripts becomes hard especially when it has to be done for multiple VMs.
 
 ### Usage
 
