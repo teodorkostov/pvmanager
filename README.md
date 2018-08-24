@@ -23,3 +23,9 @@ $ pvmanager vm run MyVM
 # PVManager tries to use safe names so the actual VM name is my_vm and can be used as well
 $ pvmanager vm run my_vm
 ```
+
+### Installation
+
+```sh
+pip install /path/to/pvmanager --user
+```
