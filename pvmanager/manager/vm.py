@@ -153,7 +153,9 @@ class VmManager(VmBaseManager):
           qemu_arguments.append('-{}'.format(option))
           qemu_arguments.append(payload)
 
+      prefix = self.get_config('prefix')
       qemu_arguments = [value for value in qemu_arguments if value is not None]
+      qemu_arguments = [value.replace('$PREFIX', prefix) for value in qemu_arguments]
 
       self.app.log.debug('memory option: {}'.format(memory_option))
       self.app.log.debug('QEMU arguments: {}'.format(qemu_arguments))

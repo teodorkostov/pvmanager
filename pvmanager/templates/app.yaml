@@ -50,8 +50,8 @@ qemu:
         - nec-usb-xhci,id=xhci
       machine: pc,accel=kvm,kernel_irqchip=on,mem-merge=off
       drive:
-        - if=pflash,format=raw,file=media/firmware/{{safe_name}}.bin
-        - if=virtio,id=drive0,file=media/image/{{safe_name}}.raw,format=raw,cache=none,aio=native
+        - if=pflash,format=raw,file=$PREFIX/media/firmware/{{safe_name}}.bin
+        - if=virtio,id=drive0,file=$PREFIX/media/image/{{safe_name}}.raw,format=raw,cache=none,aio=native
       rtc: base=localtime,clock=host,driftfix=none
       boot: order=c
       net:
